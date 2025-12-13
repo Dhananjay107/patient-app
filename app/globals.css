@@ -24,3 +24,25 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Prescription Template Styles */
+.prescription-template {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: visible !important;
+}
+
+.prescription-template table {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.prescription-template * {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.prescription-template img {
+  max-width: 100% !important;
+  height: auto !important;
+}
