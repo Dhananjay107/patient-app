@@ -190,7 +190,7 @@ export default function NewsPage() {
       setShowPrescriptionModal(true);
     } catch (error: any) {
       console.error("Error fetching prescription:", error);
-      alert("Failed to load prescription: " + (error.message || "Unknown error"));
+      toast.error("Failed to load prescription: " + (error.message || "Unknown error"));
     }
   };
 

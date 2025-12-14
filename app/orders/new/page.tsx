@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet, apiPost } from "@/lib/api";
 
 interface Pharmacy {
@@ -145,12 +146,12 @@ export default function NewOrderPage() {
     // Validate items
     const validItems = items.filter(item => item.medicineName.trim() !== "");
     if (validItems.length === 0) {
-      alert("Please add at least one medicine");
+      toast.error("Please add at least one medicine");
       return;
     }
 
     if (deliveryType === "DELIVERY" && !deliveryAddress.trim()) {
-      alert("Please enter delivery address");
+      toast.error("Please enter delivery address");
       return;
     }
 

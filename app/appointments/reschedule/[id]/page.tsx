@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet, apiPatch } from "@/lib/api";
 
 interface Appointment {
@@ -64,7 +65,7 @@ export default function ReschedulePage() {
       }
     } catch (error: any) {
       console.error("Error fetching appointment:", error);
-      alert("Failed to load appointment details");
+      toast.error("Failed to load appointment details");
       router.push("/appointments");
     } finally {
       setLoading(false);
@@ -109,10 +110,12 @@ export default function ReschedulePage() {
         reason: reason || "Rescheduled by patient",
       });
 
-      alert("Appointment rescheduled successfully!");
-      router.push("/appointments");
+      toast.success("Appointment rescheduled successfully!");
+      setTimeout(() => {
+        router.push("/appointments");
+      }, 1000);
     } catch (error: any) {
-      alert("Failed to reschedule appointment: " + (error.message || "Unknown error"));
+      toast.error("Failed to reschedule appointment: " + (error.message || "Unknown error"));
     } finally {
       setSubmitting(false);
     }

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet, apiPatch, apiPost, apiDelete } from "@/lib/api";
 import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -76,7 +77,9 @@ export default function AppointmentsPage() {
       
       // Show toast notification if available
       if (data.title && data.message) {
-        alert(`${data.title}: ${data.message}`);
+        toast.success(`${data.title}: ${data.message}`, {
+          duration: 5000,
+        });
       }
     };
 
@@ -186,9 +189,11 @@ export default function AppointmentsPage() {
       console.log("Received notification:", data);
       fetchAppointments();
       
-      // Show alert for important notifications
+      // Show toast for important notifications
       if (data.title && data.message) {
-        alert(`${data.title}: ${data.message}`);
+        toast.success(`${data.title}: ${data.message}`, {
+          duration: 5000,
+        });
       }
     };
 
@@ -212,36 +217,36 @@ export default function AppointmentsPage() {
   }, [token, user?.id]);
 
   const handleCancel = async (appointmentId: string) => {
-    if (!confirm("Are you sure you want to cancel this appointment?")) return;
+    if (!window.confirm("Are you sure you want to cancel this appointment?")) return;
     
     try {
       await apiPatch(`/api/appointments/${appointmentId}/cancel`, {
         cancellationReason: "Cancelled by patient",
       });
       fetchAppointments();
-      alert("Appointment cancelled successfully");
+      toast.success("Appointment cancelled successfully");
     } catch (error: any) {
-      alert("Failed to cancel appointment: " + (error.message || "Unknown error"));
+      toast.error("Failed to cancel appointment: " + (error.message || "Unknown error"));
     }
   };
 
   const handleMarkCompleted = async (appointmentId: string) => {
-    if (!confirm("Mark this appointment as completed?")) return;
+    if (!window.confirm("Mark this appointment as completed?")) return;
     
     try {
       await apiPatch(`/api/appointments/${appointmentId}/status`, {
         status: "COMPLETED",
       });
       fetchAppointments();
-      alert("Appointment marked as completed");
+      toast.success("Appointment marked as completed");
     } catch (error: any) {
-      alert("Failed to mark appointment as completed: " + (error.message || "Unknown error"));
+      toast.error("Failed to mark appointment as completed: " + (error.message || "Unknown error"));
     }
   };
 
   const handleOrderMedicines = (prescription: Appointment["prescription"]) => {
     if (!prescription || !prescription.items || prescription.items.length === 0) {
-      alert("No medicines in prescription to order");
+      toast.error("No medicines in prescription to order");
       return;
     }
 
@@ -318,19 +323,19 @@ export default function AppointmentsPage() {
       }
     } catch (error: any) {
       console.error("Error downloading prescription:", error);
-      alert("Failed to download prescription: " + (error.message || "Unknown error"));
+      toast.error("Failed to download prescription: " + (error.message || "Unknown error"));
     }
   };
 
   const handleDelete = async (appointmentId: string) => {
-    if (!confirm("Are you sure you want to delete this appointment? This action cannot be undone.")) return;
+    if (!window.confirm("Are you sure you want to delete this appointment? This action cannot be undone.")) return;
     
     try {
       await apiDelete(`/api/appointments/${appointmentId}`);
       fetchAppointments();
-      alert("Appointment deleted successfully");
+      toast.success("Appointment deleted successfully");
     } catch (error: any) {
-      alert("Failed to delete appointment: " + (error.message || "Unknown error"));
+      toast.error("Failed to delete appointment: " + (error.message || "Unknown error"));
     }
   };
 

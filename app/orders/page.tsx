@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet, apiPost, apiDelete } from "@/lib/api";
 import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
@@ -222,10 +223,10 @@ export default function OrdersPage() {
         } : undefined,
       });
 
-      alert("Order created successfully!");
+      toast.success("Order created successfully!");
       fetchOrders();
     } catch (error: any) {
-      alert("Failed to create order: " + (error.message || "Unknown error"));
+      toast.error("Failed to create order: " + (error.message || "Unknown error"));
     }
   };
 
@@ -235,9 +236,9 @@ export default function OrdersPage() {
     try {
       await apiDelete(`/api/orders/${orderId}`);
       fetchOrders();
-      alert("Order deleted successfully");
+      toast.success("Order deleted successfully");
     } catch (error: any) {
-      alert("Failed to delete order: " + (error.message || "Unknown error"));
+      toast.error("Failed to delete order: " + (error.message || "Unknown error"));
     }
   };
 

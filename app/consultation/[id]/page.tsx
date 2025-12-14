@@ -162,7 +162,7 @@ export default function ConsultationPage() {
       setMessage("");
       await fetchData(); // Refresh to get new message
     } catch (error: any) {
-      alert("Failed to send message: " + (error.message || "Unknown error"));
+      toast.error("Failed to send message: " + (error.message || "Unknown error"));
     } finally {
       setSending(false);
     }
@@ -227,11 +227,11 @@ export default function ConsultationPage() {
         });
       }
 
-      alert("Report uploaded successfully! The doctor will be notified.");
+      toast.success("Report uploaded successfully! The doctor will be notified.");
       fetchReportRequests();
       fetchData();
     } catch (error: any) {
-      alert("Failed to upload report: " + (error.message || "Unknown error"));
+      toast.error("Failed to upload report: " + (error.message || "Unknown error"));
     } finally {
       setUploadingReport(null);
       if (fileInputRef.current) {
@@ -248,13 +248,13 @@ export default function ConsultationPage() {
     const allowedTypes = /jpeg|jpg|png|pdf|doc|docx/;
     const fileExtension = file.name.split(".").pop()?.toLowerCase();
     if (!fileExtension || !allowedTypes.test(fileExtension)) {
-      alert("Invalid file type. Please upload images, PDFs, or documents only.");
+      toast.error("Invalid file type. Please upload images, PDFs, or documents only.");
       return;
     }
 
     // Validate file size (10MB limit)
     if (file.size > 10 * 1024 * 1024) {
-      alert("File size exceeds 10MB limit. Please upload a smaller file.");
+      toast.error("File size exceeds 10MB limit. Please upload a smaller file.");
       return;
     }
 
@@ -285,7 +285,7 @@ export default function ConsultationPage() {
     if (prescription) {
       setShowPrescriptionModal(true);
     } else {
-      alert("Prescription has not been created yet. Please wait for your doctor to generate it after the consultation.");
+      toast.error("Prescription has not been created yet. Please wait for your doctor to generate it after the consultation.");
     }
   };
 

@@ -82,7 +82,7 @@ export default function InvoicesPage() {
   const downloadOrderInvoice = async (order: Order) => {
     try {
       if (!token) {
-        alert("Please login to download invoice");
+        toast.error("Please login to download invoice");
         return;
       }
 
@@ -109,10 +109,10 @@ export default function InvoicesPage() {
       document.body.removeChild(a);
       window.URL.revokeObjectURL(url);
 
-      alert("Invoice downloaded successfully!");
+      toast.success("Invoice downloaded successfully!");
     } catch (error: any) {
       console.error("Error generating invoice:", error);
-      alert(error.message || "Failed to download invoice");
+      toast.error(error.message || "Failed to download invoice");
     }
   };
 

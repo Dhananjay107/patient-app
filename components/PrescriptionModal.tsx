@@ -85,7 +85,7 @@ export default function PrescriptionModal({
 
   const handleOrderMedicines = () => {
     if (!prescription || !prescription.items || prescription.items.length === 0) {
-      alert("No medicines in prescription to order");
+      toast.error("No medicines in prescription to order");
       return;
     }
 

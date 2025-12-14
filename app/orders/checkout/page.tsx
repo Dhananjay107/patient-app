@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiPost } from "@/lib/api";
 import DashboardLayout from "@/components/DashboardLayout";
 
@@ -101,7 +102,7 @@ export default function CheckoutPage() {
     if (!token || !user?.id || !orderData) return;
 
     if (deliveryType === "DELIVERY" && !deliveryAddress.trim()) {
-      alert("Please enter delivery address");
+      toast.error("Please enter delivery address");
       return;
     }
 
@@ -134,7 +135,7 @@ export default function CheckoutPage() {
       // Redirect to track order page
       router.push(`/orders/track/${(createdOrder as any)._id}`);
     } catch (error: any) {
-      alert("Failed to place order: " + (error.message || "Unknown error"));
+      toast.error("Failed to place order: " + (error.message || "Unknown error"));
       setLoading(false);
     }
   };

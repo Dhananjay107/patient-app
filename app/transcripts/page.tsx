@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet, apiDelete } from "@/lib/api";
 import DashboardLayout from "@/components/DashboardLayout";
 
@@ -134,9 +135,9 @@ ${msg.messageType === "AUDIO" ? "[Audio Message]" : ""}
       await apiDelete(`/api/conversations/${conversationId}`);
       fetchConversations();
       setSelectedConversation(null);
-      alert("Conversation deleted successfully");
+      toast.success("Conversation deleted successfully");
     } catch (error: any) {
-      alert("Failed to delete conversation: " + (error.message || "Unknown error"));
+      toast.error("Failed to delete conversation: " + (error.message || "Unknown error"));
     }
   };
 

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet, apiDelete } from "@/lib/api";
 import DashboardLayout from "@/components/DashboardLayout";
 import PrescriptionModal from "@/components/PrescriptionModal";
@@ -164,9 +165,9 @@ export default function RecordsPage() {
       fetchPrescriptions();
       setSelectedPrescription(null);
       setTemplateDocument(null);
-      alert("Prescription deleted successfully");
+      toast.success("Prescription deleted successfully");
     } catch (error: any) {
-      alert("Failed to delete prescription: " + (error.message || "Unknown error"));
+      toast.error("Failed to delete prescription: " + (error.message || "Unknown error"));
     }
   };
 
