@@ -202,55 +202,55 @@ export default function RecordsPage() {
     >
       <div className="max-w-7xl mx-auto">
         {prescriptions.length === 0 ? (
-          <div className="rounded-lg border border-gray-300 bg-white p-12 text-center shadow-sm">
-            <div className="text-6xl mb-4">💊</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">No Prescription Records</h2>
-            <p className="text-gray-600">You don't have any prescription records yet.</p>
+          <div className="rounded-lg border border-gray-300 bg-white p-6 sm:p-12 text-center shadow-sm">
+            <div className="text-4xl sm:text-6xl mb-4">💊</div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">No Prescription Records</h2>
+            <p className="text-sm sm:text-base text-gray-600">You don't have any prescription records yet.</p>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
             {/* Prescriptions List */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-bold text-gray-900 mb-4">All Prescriptions</h3>
+            <div className="space-y-3 sm:space-y-4">
+              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4">All Prescriptions</h3>
               {prescriptions.map((prescription) => (
                 <div
                   key={prescription._id}
-                  className={`rounded-lg border border-gray-300 bg-white p-4 shadow-sm cursor-pointer transition-colors ${
+                  className={`rounded-lg border border-gray-300 bg-white p-3 sm:p-4 shadow-sm cursor-pointer transition-colors ${
                     selectedPrescription?._id === prescription._id ? "border-blue-900 bg-blue-50" : "hover:bg-gray-50"
                   }`}
                   onClick={() => fetchTemplateDocument(prescription)}
                 >
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1">
-                      <h4 className="font-semibold text-gray-900">
+                  <div className="flex items-start justify-between gap-2 sm:gap-3">
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-sm sm:text-base font-semibold text-gray-900 truncate">
                         {prescription.doctor?.name ? `Dr. ${prescription.doctor.name}` : "Doctor"}
                       </h4>
                       {prescription.doctor?.specialization && (
-                        <p className="text-sm text-gray-600">{prescription.doctor.specialization}</p>
+                        <p className="text-xs sm:text-sm text-gray-600 truncate">{prescription.doctor.specialization}</p>
                       )}
-                      <p className="text-sm text-gray-600 mt-1">{formatDate(prescription.createdAt)}</p>
-                      <p className="text-sm text-gray-600 mt-1">
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">{formatDate(prescription.createdAt)}</p>
+                      <p className="text-xs sm:text-sm text-gray-600 mt-1">
                         {prescription.items.length} medicine(s) prescribed
                       </p>
                       {prescription.appointment?.hospital?.name && (
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-1 truncate">
                           {prescription.appointment.hospital.name}
                         </p>
                       )}
                     </div>
-                    <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
+                    <div className="flex gap-1.5 sm:gap-2 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                       <button
                         onClick={() => {
                           setModalPrescription(prescription);
                           setShowPrescriptionModal(true);
                         }}
-                        className="px-3 py-1 rounded-lg bg-blue-900 text-white text-xs font-semibold hover:bg-blue-800"
+                        className="px-2 sm:px-3 py-1 rounded-lg bg-blue-900 text-white text-[10px] sm:text-xs font-semibold hover:bg-blue-800 whitespace-nowrap"
                       >
                         View
                       </button>
                       <button
                         onClick={() => handleDelete(prescription._id)}
-                        className="px-3 py-1 rounded-lg bg-red-600 text-white text-xs font-semibold hover:bg-red-700"
+                        className="px-2 sm:px-3 py-1 rounded-lg bg-red-600 text-white text-[10px] sm:text-xs font-semibold hover:bg-red-700"
                       >
                         🗑️
                       </button>
@@ -261,44 +261,44 @@ export default function RecordsPage() {
             </div>
 
             {/* Template View */}
-            <div className="rounded-lg border border-gray-300 bg-white p-6 shadow-sm">
+            <div className="rounded-lg border border-gray-300 bg-white p-4 sm:p-6 shadow-sm">
               {!selectedPrescription ? (
-                <div className="text-center py-12">
-                  <div className="text-4xl mb-2">📄</div>
-                  <p className="text-gray-600">Select a prescription to view template</p>
+                <div className="text-center py-8 sm:py-12">
+                  <div className="text-3xl sm:text-4xl mb-2">📄</div>
+                  <p className="text-sm sm:text-base text-gray-600">Select a prescription to view template</p>
                 </div>
               ) : loadingTemplate ? (
-                <div className="flex items-center justify-center py-12">
+                <div className="flex items-center justify-center py-8 sm:py-12">
                   <div className="text-center">
                     <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-blue-600 border-r-transparent"></div>
-                    <p className="mt-4 text-gray-600">Loading template...</p>
+                    <p className="mt-4 text-sm sm:text-base text-gray-600">Loading template...</p>
                   </div>
                 </div>
               ) : templateDocument ? (
                 <>
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <h3 className="text-lg font-bold text-gray-900">Template View</h3>
-                      <p className="text-sm text-gray-600">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-4">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900">Template View</h3>
+                      <p className="text-xs sm:text-sm text-gray-600 truncate">
                         Template: <span className="font-semibold">{templateDocument.template}</span>
                       </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-shrink-0">
                       <button
                         onClick={handlePrint}
-                        className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-sm"
+                        className="px-2.5 sm:px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-[10px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-sm whitespace-nowrap"
                       >
                         🖨️ Print
                       </button>
                       <button
                         onClick={handleDownload}
-                        className="px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-sm"
+                        className="px-2.5 sm:px-3 py-1.5 rounded-lg border border-gray-300 bg-white text-[10px] sm:text-xs font-semibold text-gray-700 hover:bg-gray-50 shadow-sm whitespace-nowrap"
                       >
                         💾 Download
                       </button>
                     </div>
                   </div>
-                  <div className="max-h-[600px] overflow-y-auto border border-gray-200 rounded-lg p-4 bg-white">
+                  <div className="max-h-[400px] sm:max-h-[600px] overflow-y-auto border border-gray-200 rounded-lg p-3 sm:p-4 bg-white">
                     <div
                       className="prescription-template"
                       dangerouslySetInnerHTML={{ __html: templateDocument.rendered }}

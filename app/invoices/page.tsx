@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import toast from "react-hot-toast";
 import { apiGet } from "@/lib/api";
 import DashboardLayout from "@/components/DashboardLayout";
 import { InvoicesIcon, OrdersIcon } from "@/components/icons";
@@ -149,9 +150,9 @@ export default function InvoicesPage() {
       title="Invoices & Bills"
       description="Download your prescriptions, invoices, and bills"
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
         {/* Summary Statistics */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg">
             <div className="relative z-10">
               <div className="mb-4 flex items-center justify-between">
@@ -211,28 +212,31 @@ export default function InvoicesPage() {
           <div className="flex gap-1">
             <button
               onClick={() => setActiveTab("orders")}
-              className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+              className={`flex-1 rounded-lg px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === "orders"
                   ? "bg-blue-600 text-white shadow-md"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              <div className="flex items-center justify-center gap-2">
-                <OrdersIcon className="w-5 h-5" />
-                Order Invoices ({orders.length})
+              <div className="flex items-center justify-center gap-1 sm:gap-2">
+                <OrdersIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="hidden xs:inline">Order Invoices</span>
+                <span className="xs:hidden">Orders</span>
+                <span className="hidden sm:inline">({orders.length})</span>
               </div>
             </button>
             <button
               onClick={() => setActiveTab("bills")}
-              className={`flex-1 rounded-lg px-4 py-3 text-sm font-semibold transition-all ${
+              className={`flex-1 rounded-lg px-2 sm:px-4 py-2 sm:py-3 text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === "bills"
                   ? "bg-blue-600 text-white shadow-md"
                   : "text-gray-700 hover:bg-gray-100"
               }`}
             >
-              <div className="flex items-center justify-center gap-2">
-                <InvoicesIcon className="w-5 h-5" />
-                Bills ({bills.length})
+              <div className="flex items-center justify-center gap-1 sm:gap-2">
+                <InvoicesIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Bills</span>
+                <span className="hidden sm:inline">({bills.length})</span>
               </div>
             </button>
           </div>
@@ -242,12 +246,10 @@ export default function InvoicesPage() {
         <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
           {/* Order Invoices Tab */}
           {activeTab === "orders" && (
-            <div className="p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Order Invoices</h2>
-                  <p className="mt-1 text-sm text-gray-600">Download PDF invoices for your medicine orders</p>
-                </div>
+            <div className="p-4 sm:p-6">
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Order Invoices</h2>
+                <p className="mt-1 text-xs sm:text-sm text-gray-600">Download PDF invoices for your medicine orders</p>
               </div>
               {orders.length === 0 ? (
                 <div className="py-16 text-center">
@@ -268,24 +270,24 @@ export default function InvoicesPage() {
                   {orders.map((order) => (
                     <div
                       key={order._id}
-                      className="group rounded-lg border border-gray-200 bg-gradient-to-r from-white to-gray-50 p-5 transition-all hover:border-blue-300 hover:shadow-md"
+                      className="group rounded-lg border border-gray-200 bg-gradient-to-r from-white to-gray-50 p-4 sm:p-5 transition-all hover:border-blue-300 hover:shadow-md"
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="mb-3 flex items-center gap-3">
-                            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-                              <OrdersIcon className="w-6 h-6 text-blue-600" />
+                      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="mb-3 flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-blue-100 flex-shrink-0">
+                              <OrdersIcon className="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" />
                             </div>
-                            <div>
-                              <h3 className="text-lg font-bold text-gray-900">
+                            <div className="min-w-0 flex-1">
+                              <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">
                                 Order #{order._id.slice(-8).toUpperCase()}
                               </h3>
-                              <p className="text-sm text-gray-600">
+                              <p className="text-xs sm:text-sm text-gray-600 truncate">
                                 {order.pharmacy?.name || "Pharmacy"} • {order.items.length} item{order.items.length !== 1 ? "s" : ""}
                               </p>
                             </div>
                           </div>
-                          <div className="ml-16 grid gap-2 sm:grid-cols-2">
+                          <div className="ml-0 sm:ml-16 grid gap-2 grid-cols-1 sm:grid-cols-2">
                             <div>
                               <p className="text-xs font-semibold text-gray-500">Order Date</p>
                               <p className="text-sm text-gray-900">{formatDate(order.createdAt)}</p>
@@ -311,10 +313,10 @@ export default function InvoicesPage() {
                         </div>
                         <button
                           onClick={() => downloadOrderInvoice(order)}
-                          className="ml-4 flex h-12 w-12 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md"
+                          className="sm:ml-4 flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-blue-600 text-white shadow-sm transition-all hover:bg-blue-700 hover:shadow-md flex-shrink-0 self-start sm:self-auto"
                           title="Download Invoice"
                         >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                           </svg>
                         </button>
@@ -328,12 +330,10 @@ export default function InvoicesPage() {
 
           {/* Bills Tab */}
           {activeTab === "bills" && (
-            <div className="p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900">Bills</h2>
-                  <p className="mt-1 text-sm text-gray-600">View your medical bills and charges</p>
-                </div>
+            <div className="p-4 sm:p-6">
+              <div className="mb-4 sm:mb-6">
+                <h2 className="text-lg sm:text-2xl font-bold text-gray-900">Bills</h2>
+                <p className="mt-1 text-xs sm:text-sm text-gray-600">View your medical bills and charges</p>
               </div>
               {bills.length === 0 ? (
                 <div className="py-16 text-center">
@@ -348,21 +348,21 @@ export default function InvoicesPage() {
                   {bills.map((bill) => (
                     <div
                       key={bill._id}
-                      className="group rounded-lg border border-gray-200 bg-gradient-to-r from-white to-gray-50 p-5 transition-all hover:border-purple-300 hover:shadow-md"
+                      className="group rounded-lg border border-gray-200 bg-gradient-to-r from-white to-gray-50 p-4 sm:p-5 transition-all hover:border-purple-300 hover:shadow-md"
                     >
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100">
-                            <InvoicesIcon className="w-6 h-6 text-purple-600" />
+                      <div className="flex items-center justify-between gap-3 sm:gap-4">
+                        <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+                          <div className="flex h-10 w-10 sm:h-12 sm:w-12 items-center justify-center rounded-lg bg-purple-100 flex-shrink-0">
+                            <InvoicesIcon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                           </div>
-                          <div>
-                            <h3 className="text-lg font-bold text-gray-900">{bill.type}</h3>
-                            <p className="text-sm text-gray-600">{formatDate(bill.occurredAt)}</p>
+                          <div className="min-w-0 flex-1">
+                            <h3 className="text-base sm:text-lg font-bold text-gray-900 truncate">{bill.type}</h3>
+                            <p className="text-xs sm:text-sm text-gray-600">{formatDate(bill.occurredAt)}</p>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <p className="text-2xl font-bold text-gray-900">₹{bill.amount.toFixed(2)}</p>
-                          <p className="text-xs text-gray-500">Amount</p>
+                        <div className="text-right flex-shrink-0">
+                          <p className="text-lg sm:text-2xl font-bold text-gray-900">₹{bill.amount.toFixed(2)}</p>
+                          <p className="text-[10px] sm:text-xs text-gray-500">Amount</p>
                         </div>
                       </div>
                     </div>

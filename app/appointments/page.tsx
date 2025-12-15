@@ -393,46 +393,46 @@ export default function AppointmentsPage() {
     >
       <div className="max-w-7xl mx-auto">
         {appointments.length === 0 ? (
-          <div className="rounded-lg border border-gray-300 bg-white p-12 text-center shadow-sm">
-            <div className="text-6xl mb-4">📅</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">No Appointments</h2>
-            <p className="text-gray-600 mb-6">You don't have any appointments yet.</p>
+          <div className="rounded-lg border border-gray-300 bg-white p-6 sm:p-12 text-center shadow-sm">
+            <div className="text-4xl sm:text-6xl mb-4">📅</div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">No Appointments</h2>
+            <p className="text-sm sm:text-base text-gray-600 mb-6">You don't have any appointments yet.</p>
             <Link
               href="/appointments/book"
-              className="inline-block rounded-lg bg-blue-900 px-6 py-3 font-semibold text-white shadow-sm hover:bg-blue-800"
+              className="inline-block rounded-lg bg-blue-900 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold text-white shadow-sm hover:bg-blue-800"
             >
               Book Your First Appointment
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {appointments.map((appointment) => (
               <div
                 key={appointment._id}
-                className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm hover:shadow-md transition-shadow"
+                className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm hover:shadow-md transition-shadow"
               >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-xl">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-3 flex-wrap">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-blue-100 flex items-center justify-center text-lg sm:text-xl flex-shrink-0">
                         👨‍⚕️
                       </div>
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold text-gray-900">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
                           Dr. {appointment.doctor?.name || "Doctor"}
                         </h3>
                         {appointment.doctor?.specialization && (
-                          <p className="text-sm text-blue-600 font-medium">
+                          <p className="text-xs sm:text-sm text-blue-600 font-medium truncate">
                             {appointment.doctor.specialization}
                           </p>
                         )}
                       </div>
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor(appointment.status)}`}>
+                      <span className={`rounded-full px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-semibold whitespace-nowrap ${getStatusColor(appointment.status)}`}>
                         {appointment.status === "CONFIRMED" ? "Appointment Received" : appointment.status}
                       </span>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3 mb-4">
                       <div className="flex items-start gap-2">
                         <span className="text-gray-500">🏥</span>
                         <div>
@@ -472,35 +472,35 @@ export default function AppointmentsPage() {
                     </div>
 
                     {appointment.prescription && (
-                      <div className="mt-4 p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100">
-                              <RecordsIcon className="w-6 h-6 text-green-700" />
+                      <div className="mt-4 p-3 sm:p-4 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-lg">
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-lg bg-green-100 flex-shrink-0">
+                              <RecordsIcon className="w-5 h-5 sm:w-6 sm:h-6 text-green-700" />
                             </div>
-                            <div>
-                              <p className="text-sm font-semibold text-green-900 mb-1">
+                            <div className="min-w-0">
+                              <p className="text-xs sm:text-sm font-semibold text-green-900 mb-1">
                                 ✓ Prescription Available
                               </p>
-                              <p className="text-xs text-green-700">
+                              <p className="text-[10px] sm:text-xs text-green-700">
                                 {appointment.prescription.items.length} medicine(s) prescribed
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center gap-2">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <button
                               onClick={() => handleViewPrescription(appointment.prescription, appointment)}
-                              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 shadow-sm transition-colors"
+                              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-blue-600 text-white text-xs sm:text-sm font-semibold hover:bg-blue-700 shadow-sm transition-colors"
                             >
-                              <EyeIcon className="w-4 h-4" />
-                              View
+                              <EyeIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span className="hidden xs:inline">View</span>
                             </button>
                             <button
                               onClick={() => handleDownloadPrescription(appointment.prescription, appointment)}
-                              className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-green-600 text-white text-sm font-semibold hover:bg-green-700 shadow-sm transition-colors"
+                              className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3 py-1.5 rounded-lg bg-green-600 text-white text-xs sm:text-sm font-semibold hover:bg-green-700 shadow-sm transition-colors"
                             >
-                              <DownloadIcon className="w-4 h-4" />
-                              Download
+                              <DownloadIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                              <span className="hidden xs:inline">Download</span>
                             </button>
                           </div>
                         </div>
@@ -508,24 +508,24 @@ export default function AppointmentsPage() {
                     )}
                   </div>
                   
-                  <div className="flex flex-col gap-2 min-w-[140px]">
+                  <div className="flex flex-row sm:flex-col gap-2 sm:min-w-[140px] flex-wrap sm:flex-nowrap">
                     {appointment.status === "PENDING" && (
                       <>
                         <button
                           onClick={() => router.push(`/appointments/reschedule/${appointment._id}`)}
-                          className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm transition-colors"
+                          className="rounded-lg border border-gray-300 bg-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm transition-colors whitespace-nowrap"
                         >
                           Reschedule
                         </button>
                         <button
                           onClick={() => handleCancel(appointment._id)}
-                          className="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100 shadow-sm transition-colors"
+                          className="rounded-lg border border-red-300 bg-red-50 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-red-700 hover:bg-red-100 shadow-sm transition-colors whitespace-nowrap"
                         >
                           Cancel
                         </button>
                         <button
                           onClick={() => handleDelete(appointment._id)}
-                          className="rounded-lg border border-red-500 bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 shadow-sm transition-colors"
+                          className="rounded-lg border border-red-500 bg-red-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-red-700 shadow-sm transition-colors whitespace-nowrap"
                         >
                           🗑️ Delete
                         </button>
@@ -534,7 +534,7 @@ export default function AppointmentsPage() {
                     {appointment.status === "CANCELLED" && (
                       <button
                         onClick={() => handleDelete(appointment._id)}
-                        className="rounded-lg border border-red-500 bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 shadow-sm transition-colors"
+                        className="rounded-lg border border-red-500 bg-red-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-red-700 shadow-sm transition-colors whitespace-nowrap"
                       >
                         🗑️ Delete
                       </button>
@@ -543,45 +543,45 @@ export default function AppointmentsPage() {
                       <>
                         <Link
                           href={`/consultation/${appointment._id}`}
-                          className="rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 shadow-sm transition-colors text-center"
+                          className="rounded-lg bg-purple-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-purple-700 shadow-sm transition-colors text-center whitespace-nowrap"
                         >
-                          💬 Chat with Doctor
+                          💬 Chat
                         </Link>
                         {appointment.prescription && (
                           <button
                             onClick={() => handleOrderMedicines(appointment.prescription)}
-                            className="rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 shadow-sm transition-colors"
+                            className="rounded-lg bg-green-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-green-700 shadow-sm transition-colors whitespace-nowrap"
                           >
-                            Order Medicines
+                            Order
                           </button>
                         )}
                         <button
                           onClick={() => handleMarkCompleted(appointment._id)}
-                          className="rounded-lg bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 shadow-sm transition-colors"
+                          className="rounded-lg bg-blue-900 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-blue-800 shadow-sm transition-colors whitespace-nowrap"
                         >
-                          Mark Completed
+                          Complete
                         </button>
                         <button
                           onClick={() => handleCancel(appointment._id)}
-                          className="rounded-lg border border-red-300 bg-red-50 px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-100 shadow-sm transition-colors"
+                          className="rounded-lg border border-red-300 bg-red-50 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-red-700 hover:bg-red-100 shadow-sm transition-colors whitespace-nowrap"
                         >
                           Cancel
                         </button>
                       </>
                     )}
                     {appointment.status === "COMPLETED" && (
-                      <div className="text-center space-y-2">
-                        <span className="text-sm font-semibold text-blue-900">✓ Completed</span>
+                      <div className="text-center space-y-2 w-full sm:w-auto">
+                        <span className="text-xs sm:text-sm font-semibold text-blue-900 block">✓ Completed</span>
                         <Link
                           href={`/consultation/${appointment._id}`}
-                          className="block w-full rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700 shadow-sm transition-colors"
+                          className="block w-full rounded-lg bg-purple-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-purple-700 shadow-sm transition-colors"
                         >
                           💬 View Chat
                         </Link>
                         {appointment.prescription && (
                           <button
                             onClick={() => handleOrderMedicines(appointment.prescription)}
-                            className="w-full rounded-lg bg-green-600 px-4 py-2 text-sm font-semibold text-white hover:bg-green-700 shadow-sm transition-colors"
+                            className="w-full rounded-lg bg-green-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-green-700 shadow-sm transition-colors"
                           >
                             Order Medicines
                           </button>
@@ -597,16 +597,16 @@ export default function AppointmentsPage() {
 
         {/* Prescription View Modal */}
         {viewingPrescription && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/50">
             <div className="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col">
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100/50">
-                <div>
-                  <h2 className="text-2xl font-bold text-gray-900 flex items-center gap-2">
-                    <RecordsIcon className="w-7 h-7 text-blue-600" />
-                    Prescription Details
+              <div className="flex items-center justify-between p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-blue-100/50">
+                <div className="min-w-0 flex-1">
+                  <h2 className="text-lg sm:text-2xl font-bold text-gray-900 flex items-center gap-2">
+                    <RecordsIcon className="w-5 h-5 sm:w-7 sm:h-7 text-blue-600 flex-shrink-0" />
+                    <span className="truncate">Prescription Details</span>
                   </h2>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1 truncate">
                     Dr. {viewingPrescription.appointment.doctor?.name || "Doctor"}
                   </p>
                 </div>
@@ -624,7 +624,7 @@ export default function AppointmentsPage() {
               </div>
 
               {/* Modal Content */}
-              <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex-1 overflow-y-auto p-4 sm:p-6">
                 {loadingPrescription ? (
                   <div className="flex items-center justify-center py-12">
                     <div className="text-center">
@@ -697,7 +697,7 @@ export default function AppointmentsPage() {
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 bg-gray-50">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 sm:gap-3 p-4 sm:p-6 border-t border-gray-200 bg-gray-50">
                 {viewingPrescription.prescription && (
                   <button
                     onClick={() => handleOrderMedicines(viewingPrescription.prescription)}

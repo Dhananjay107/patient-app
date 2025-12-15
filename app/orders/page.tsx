@@ -301,63 +301,65 @@ export default function OrdersPage() {
       <div className="max-w-7xl mx-auto">
         {/* Orders List */}
         {orders.length === 0 ? (
-          <div className="rounded-lg border border-gray-300 bg-white p-12 text-center shadow-sm">
-            <div className="text-6xl mb-4">📦</div>
-            <h2 className="text-xl font-bold text-gray-900 mb-2">No Orders</h2>
-            <p className="text-gray-600 mb-6">You don't have any orders yet.</p>
+          <div className="rounded-lg border border-gray-300 bg-white p-6 sm:p-12 text-center shadow-sm">
+            <div className="text-4xl sm:text-6xl mb-4">📦</div>
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">No Orders</h2>
+            <p className="text-sm sm:text-base text-gray-600 mb-6">You don't have any orders yet.</p>
             <Link
               href="/orders/new"
-              className="inline-block rounded-lg bg-blue-900 px-6 py-3 font-semibold text-white shadow-sm hover:bg-blue-800"
+              className="inline-block rounded-lg bg-blue-900 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base font-semibold text-white shadow-sm hover:bg-blue-800"
             >
               Place Your First Order
             </Link>
           </div>
         ) : (
-          <div className="space-y-4">
+          <div className="space-y-3 sm:space-y-4">
             {orders.map((order) => (
               <div
                 key={order._id}
-                className="rounded-lg border border-gray-300 bg-white p-6 shadow-sm"
+                className="rounded-lg border border-gray-300 bg-white p-4 sm:p-6 shadow-sm"
               >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h3 className="text-lg font-bold text-gray-900">
+                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 sm:gap-3 mb-2 flex-wrap">
+                      <h3 className="text-base sm:text-lg font-bold text-gray-900">
                         Order #{order._id.slice(-8)}
                       </h3>
-                      <span className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor(order.status)}`}>
+                      <span className={`rounded-full px-2 sm:px-3 py-1 text-[10px] sm:text-xs font-semibold whitespace-nowrap ${getStatusColor(order.status)}`}>
                         {order.status}
                       </span>
                     </div>
-                    <p className="text-gray-700 mb-2">
-                      <strong>Pharmacy:</strong> {order.pharmacy?.name || "N/A"}
-                    </p>
-                    <p className="text-gray-700 mb-2">
-                      <strong>Items:</strong> {order.items.map(i => `${i.medicineName} (${i.quantity})`).join(", ")}
-                    </p>
-                    {order.totalAmount && (
-                      <p className="text-gray-700 mb-2">
-                        <strong>Amount:</strong> ₹{order.totalAmount}
+                    <div className="space-y-1.5 sm:space-y-2 text-sm sm:text-base">
+                      <p className="text-gray-700">
+                        <strong className="text-xs sm:text-sm">Pharmacy:</strong> <span className="break-words">{order.pharmacy?.name || "N/A"}</span>
                       </p>
-                    )}
-                    <p className="text-gray-700 mb-2">
-                      <strong>Type:</strong> {order.deliveryType}
-                    </p>
-                    <p className="text-gray-700 mb-2">
-                      <strong>Ordered:</strong> {formatDate(order.createdAt)}
-                    </p>
+                      <p className="text-gray-700">
+                        <strong className="text-xs sm:text-sm">Items:</strong> <span className="break-words">{order.items.map(i => `${i.medicineName} (${i.quantity})`).join(", ")}</span>
+                      </p>
+                      {order.totalAmount && (
+                        <p className="text-gray-700">
+                          <strong className="text-xs sm:text-sm">Amount:</strong> ₹{order.totalAmount}
+                        </p>
+                      )}
+                      <p className="text-gray-700">
+                        <strong className="text-xs sm:text-sm">Type:</strong> {order.deliveryType}
+                      </p>
+                      <p className="text-gray-700">
+                        <strong className="text-xs sm:text-sm">Ordered:</strong> {formatDate(order.createdAt)}
+                      </p>
+                    </div>
                   </div>
-                  <div className="ml-4 flex flex-col gap-2">
+                  <div className="flex flex-row sm:flex-col gap-2 sm:ml-4 flex-shrink-0">
                     <Link
                       href={`/orders/track/${order._id}`}
-                      className="rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm"
+                      className="rounded-lg border border-gray-300 bg-white px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-gray-700 hover:bg-gray-50 shadow-sm whitespace-nowrap"
                     >
                       Track Order
                     </Link>
                     {(order.status === "PENDING" || order.status === "CANCELLED") && (
                       <button
                         onClick={() => handleDelete(order._id)}
-                        className="rounded-lg border border-red-500 bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-700 shadow-sm"
+                        className="rounded-lg border border-red-500 bg-red-600 px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm font-semibold text-white hover:bg-red-700 shadow-sm whitespace-nowrap"
                       >
                         🗑️ Delete
                       </button>
@@ -371,26 +373,26 @@ export default function OrdersPage() {
 
         {/* Prescriptions Section */}
         {prescriptions.length > 0 && (
-          <div className="mt-8 rounded-lg border border-gray-300 bg-white p-6 shadow-sm">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Order from Prescription</h2>
-            <div className="space-y-4">
+          <div className="mt-6 sm:mt-8 rounded-lg border border-gray-300 bg-white p-4 sm:p-6 shadow-sm">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-4">Order from Prescription</h2>
+            <div className="space-y-3 sm:space-y-4">
               {prescriptions.map((prescription) => (
-                <div key={prescription._id} className="border border-gray-200 rounded-lg p-4">
-                  <h3 className="font-semibold text-gray-900 mb-2">
+                <div key={prescription._id} className="border border-gray-200 rounded-lg p-3 sm:p-4">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-2">
                     Prescription from Appointment
                   </h3>
-                  <div className="mb-4">
-                    <p className="text-sm text-gray-600 mb-2">Medicines:</p>
-                    <ul className="list-disc list-inside text-sm text-gray-700">
+                  <div className="mb-3 sm:mb-4">
+                    <p className="text-xs sm:text-sm text-gray-600 mb-2">Medicines:</p>
+                    <ul className="list-disc list-inside text-xs sm:text-sm text-gray-700 space-y-1">
                       {prescription.items.map((item, idx) => (
-                        <li key={idx}>
+                        <li key={idx} className="break-words">
                           {item.medicineName} - {item.dosage}, {item.frequency}, {item.duration}
                         </li>
                       ))}
                     </ul>
                   </div>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-900 mb-2">
+                    <label className="block text-xs sm:text-sm font-semibold text-gray-900 mb-2">
                       Select Nearby Pharmacy
                     </label>
                     <div className="space-y-2">
@@ -398,15 +400,15 @@ export default function OrdersPage() {
                         <button
                           key={pharmacy._id}
                           onClick={() => handleOrderFromPrescription(prescription._id, pharmacy._id)}
-                          className="w-full rounded-lg border border-gray-300 bg-white p-3 text-left hover:bg-gray-50 transition-colors"
+                          className="w-full rounded-lg border border-gray-300 bg-white p-2.5 sm:p-3 text-left hover:bg-gray-50 transition-colors"
                         >
-                          <div className="flex items-center justify-between">
-                            <div>
-                              <h4 className="font-semibold text-gray-900">{pharmacy.name}</h4>
-                              <p className="text-sm text-gray-600">{pharmacy.address}</p>
+                          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 sm:gap-0">
+                            <div className="min-w-0 flex-1">
+                              <h4 className="text-sm sm:text-base font-semibold text-gray-900 truncate">{pharmacy.name}</h4>
+                              <p className="text-xs sm:text-sm text-gray-600 break-words">{pharmacy.address}</p>
                             </div>
                             {pharmacy.distance !== undefined && (
-                              <span className="text-sm font-semibold text-blue-900">
+                              <span className="text-xs sm:text-sm font-semibold text-blue-900 flex-shrink-0">
                                 {pharmacy.distance.toFixed(1)} km
                               </span>
                             )}

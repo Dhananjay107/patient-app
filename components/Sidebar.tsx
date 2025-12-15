@@ -11,8 +11,6 @@ import {
   InvoicesIcon,
   RecordsIcon,
   NewsIcon,
-  MenuIcon,
-  CloseIcon,
 } from "./icons";
 
 interface NavItem {
@@ -67,23 +65,16 @@ const navigation: NavItem[] = [
   },
 ];
 
-export default function Sidebar() {
+interface SidebarProps {
+  isMobileOpen: boolean;
+  setIsMobileOpen: (open: boolean) => void;
+}
+
+export default function Sidebar({ isMobileOpen, setIsMobileOpen }: SidebarProps) {
   const pathname = usePathname();
-  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
   return (
     <>
-      {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-20 left-4 z-50">
-        <button
-          onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="p-2 rounded-lg bg-blue-900 text-white shadow-lg hover:bg-blue-800 transition-colors"
-          aria-label="Toggle menu"
-        >
-          {isMobileOpen ? <CloseIcon className="w-6 h-6" /> : <MenuIcon className="w-6 h-6" />}
-        </button>
-      </div>
-
       {/* Mobile overlay */}
       {isMobileOpen && (
         <div
@@ -97,7 +88,7 @@ export default function Sidebar() {
         className={`
           fixed top-0 left-0 z-40 h-screen transition-transform duration-300 ease-in-out
           lg:translate-x-0
-          ${isMobileOpen ? "translate-x-0" : "-translate-x-full"}
+          ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
           w-64 bg-white border-r border-gray-200 shadow-lg lg:shadow-sm
         `}
       >

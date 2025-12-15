@@ -22,6 +22,7 @@ export default function DashboardLayout({
   const pathname = usePathname();
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -57,39 +58,39 @@ export default function DashboardLayout({
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Sidebar - Always rendered, fixed positioning handled inside */}
-      <Sidebar />
+      {/* Sidebar - Always visible on desktop, toggleable on mobile */}
+      <Sidebar isMobileOpen={isMobileMenuOpen} setIsMobileOpen={setIsMobileMenuOpen} />
 
       {/* Main content area - Add left margin on desktop to account for fixed sidebar */}
-      <div className="flex-1 flex flex-col lg:ml-64 min-w-0">
+      <div className="flex-1 flex flex-col lg:ml-64 min-w-0 w-full">
         {/* Navbar */}
-        <Navbar user={user} />
+        <Navbar user={user} onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
         {/* Page header */}
         {(title || actionButton) && (
           <div className="bg-white border-b border-gray-200">
-            <div className="px-4 sm:px-6 lg:px-8 py-6">
-              <div className="flex items-center justify-between">
-                <div>
+            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
+                <div className="flex-1 min-w-0">
                   {title && (
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 leading-[100%]">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-[100%] break-words">
                       {title}
                     </h1>
                   )}
                   {description && (
-                    <p className="mt-2 text-sm text-gray-600 leading-[100%]">
+                    <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-600 leading-[100%] break-words">
                       {description}
                     </p>
                   )}
                 </div>
-                {actionButton && <div>{actionButton}</div>}
+                {actionButton && <div className="flex-shrink-0">{actionButton}</div>}
               </div>
             </div>
           </div>
         )}
 
         {/* Page content */}
-        <main className="flex-1 px-4 sm:px-6 lg:px-8 py-6">
+        <main className="flex-1 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 w-full overflow-x-hidden">
           {children}
         </main>
       </div>

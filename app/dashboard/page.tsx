@@ -147,9 +147,9 @@ export default function DashboardPage() {
       title="Patient Dashboard"
       description={`Welcome back, ${user?.name || "Patient"}`}
     >
-      <div className="max-w-7xl mx-auto space-y-6">
+      <div className="max-w-7xl mx-auto space-y-4 sm:space-y-6">
         {/* Stats Cards with Gradient */}
-        <div className="grid gap-6 md:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="relative overflow-hidden rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 p-6 text-white shadow-lg transition-transform hover:scale-105">
             <div className="relative z-10">
               <div className="mb-4 flex items-center justify-between">
@@ -208,12 +208,12 @@ export default function DashboardPage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid gap-6 lg:grid-cols-3">
+        <div className="grid gap-4 sm:gap-6 lg:grid-cols-3">
           {/* Quick Actions - Left Column */}
           <div className="lg:col-span-2">
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <h2 className="mb-6 text-xl font-bold text-gray-900">Quick Actions</h2>
-              <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+              <h2 className="mb-4 sm:mb-6 text-lg sm:text-xl font-bold text-gray-900">Quick Actions</h2>
+              <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2">
                 <Link
                   href="/appointments/book"
                   className="group relative overflow-hidden rounded-lg border border-gray-200 bg-gradient-to-br from-blue-50 to-blue-100 p-5 transition-all hover:border-blue-300 hover:shadow-md"
@@ -314,11 +314,11 @@ export default function DashboardPage() {
           </div>
 
           {/* Recent Activity - Right Column */}
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             {/* Recent Appointments */}
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-900">Recent Appointments</h2>
+            <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">Recent Appointments</h2>
                 <Link
                   href="/appointments"
                   className="text-sm font-semibold text-blue-600 hover:text-blue-700"
@@ -365,9 +365,9 @@ export default function DashboardPage() {
             </div>
 
             {/* Recent Orders */}
-            <div className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-lg font-bold text-gray-900">Recent Orders</h2>
+            <div className="rounded-xl border border-gray-200 bg-white p-4 sm:p-6 shadow-sm">
+              <div className="mb-4 flex items-center justify-between gap-2">
+                <h2 className="text-base sm:text-lg font-bold text-gray-900">Recent Orders</h2>
                 <Link
                   href="/orders"
                   className="text-sm font-semibold text-blue-600 hover:text-blue-700"

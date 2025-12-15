@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { NewsIcon, DashboardIcon } from "./icons";
+import { NewsIcon, DashboardIcon, MenuIcon } from "./icons";
 import { apiGet } from "@/lib/api";
 import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 
@@ -13,9 +13,10 @@ interface NavbarProps {
     email?: string;
     role?: string;
   } | null;
+  onMenuToggle?: () => void;
 }
 
-export default function Navbar({ user }: NavbarProps) {
+export default function Navbar({ user, onMenuToggle }: NavbarProps) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [notificationCount, setNotificationCount] = useState(0);
@@ -82,26 +83,36 @@ export default function Navbar({ user }: NavbarProps) {
 
   return (
     <nav className="sticky top-0 z-30 bg-white border-b border-gray-200 shadow-sm">
-      <div className="px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Left side - Page title will be set by pages */}
-          <div className="flex items-center gap-4">
-            <h1 className="text-xl font-bold text-gray-900 hidden sm:block">
+      <div className="px-3 sm:px-4 lg:px-8">
+        <div className="flex items-center justify-between h-14 sm:h-16">
+          {/* Left side - Hamburger menu and Page title */}
+          <div className="flex items-center gap-2 sm:gap-4 min-w-0 flex-1">
+            {/* Hamburger menu button - visible only on mobile */}
+            {onMenuToggle && (
+              <button
+                onClick={onMenuToggle}
+                className="lg:hidden p-2 rounded-lg bg-blue-900 text-white shadow-sm hover:bg-blue-800 transition-colors flex-shrink-0"
+                aria-label="Toggle menu"
+              >
+                <MenuIcon className="w-5 h-5" />
+              </button>
+            )}
+            <h1 className="text-base sm:text-xl font-bold text-gray-900 truncate">
               {user?.name ? `Welcome, ${user.name.split(" ")[0]}` : "Patient Portal"}
             </h1>
           </div>
 
           {/* Right side - User menu */}
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
             {/* Notifications icon with count */}
             <Link
               href="/news"
-              className="relative p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-blue-900 transition-colors"
+              className="relative p-1.5 sm:p-2 rounded-lg text-gray-600 hover:bg-gray-100 hover:text-blue-900 transition-colors"
               aria-label="Notifications"
             >
               <NewsIcon className="w-5 h-5" />
               {notificationCount > 0 && (
-                <span className="absolute top-0 right-0 h-5 w-5 bg-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center">
+                <span className="absolute top-0 right-0 h-4 w-4 sm:h-5 sm:w-5 bg-red-600 text-white text-[10px] sm:text-xs font-bold rounded-full flex items-center justify-center">
                   {notificationCount > 9 ? "9+" : notificationCount}
                 </span>
               )}
@@ -111,20 +122,20 @@ export default function Navbar({ user }: NavbarProps) {
             <div className="relative">
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="flex items-center gap-3 px-3 py-2 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-center gap-1.5 sm:gap-3 px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg hover:bg-gray-100 transition-colors"
               >
-                <div className="h-8 w-8 rounded-full bg-blue-900 flex items-center justify-center text-white text-sm font-semibold">
+                <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-blue-900 flex items-center justify-center text-white text-xs sm:text-sm font-semibold flex-shrink-0">
                   {getUserInitials()}
                 </div>
-                <div className="hidden md:block text-left">
-                  <div className="text-sm font-semibold text-gray-900 leading-[100%]">
+                <div className="hidden md:block text-left min-w-0">
+                  <div className="text-sm font-semibold text-gray-900 leading-[100%] truncate max-w-[120px]">
                     {user?.name || "User"}
                   </div>
-                  <div className="text-xs text-gray-500 leading-[100%]">
+                  <div className="text-xs text-gray-500 leading-[100%] truncate max-w-[120px]">
                     {user?.email || ""}
                   </div>
                 </div>
-                <span className="text-gray-400">▼</span>
+                <span className="text-gray-400 hidden sm:inline text-xs">▼</span>
               </button>
 
               {/* Dropdown menu */}
@@ -134,7 +145,7 @@ export default function Navbar({ user }: NavbarProps) {
                     className="fixed inset-0 z-10"
                     onClick={() => setIsMenuOpen(false)}
                   />
-                  <div className="absolute right-0 mt-2 w-56 rounded-lg bg-white border border-gray-200 shadow-lg z-20">
+                  <div className="absolute right-0 mt-2 w-56 sm:w-64 rounded-lg bg-white border border-gray-200 shadow-lg z-20 max-w-[calc(100vw-2rem)]">
                     <div className="p-4 border-b border-gray-200">
                       <div className="text-sm font-semibold text-gray-900 leading-[100%]">
                         {user?.name || "User"}
