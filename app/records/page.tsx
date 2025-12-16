@@ -81,22 +81,22 @@ export default function RecordsPage() {
       
       // Enrich with doctor and appointment data
       const enrichedPrescriptions = await Promise.all(
-        prescriptionsList.map(async (prescription) => {
+        prescriptionsList.map(async (prescription): Promise<Prescription> => {
           try {
             const [doctor, appointment] = await Promise.all([
-              apiGet(`/api/users/${prescription.doctorId}`).catch(() => null),
-              apiGet(`/api/appointments/${prescription.appointmentId}`).catch(() => null),
+              apiGet<{ name: string; specialization?: string }>(`/api/users/${prescription.doctorId}`).catch(() => null),
+              apiGet<{ hospitalId?: string; scheduledAt: string }>(`/api/appointments/${prescription.appointmentId}`).catch(() => null),
             ]);
             
-            let hospital = null;
+            let hospital: { name: string } | null = null;
             if (appointment?.hospitalId) {
-              hospital = await apiGet(`/api/master/hospitals/${appointment.hospitalId}`).catch(() => null);
+              hospital = await apiGet<{ name: string }>(`/api/master/hospitals/${appointment.hospitalId}`).catch(() => null);
             }
             
             return {
               ...prescription,
-              doctor,
-              appointment: appointment ? { ...appointment, hospital } : null,
+              doctor: doctor || undefined,
+              appointment: appointment ? { ...appointment, hospital: hospital || undefined } : undefined,
             };
           } catch {
             return prescription;

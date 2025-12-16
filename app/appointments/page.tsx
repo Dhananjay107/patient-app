@@ -117,28 +117,28 @@ export default function AppointmentsPage() {
     
     try {
       console.log("Fetching appointments for patientId:", patientId);
-      const data = await apiGet<Appointment[]>(`/api/appointments?patientId=${patientId}`);
+      const data = await apiGet<any[]>(`/api/appointments?patientId=${patientId}`);
       console.log("Received appointments:", data);
       const appointmentsList = Array.isArray(data) ? data : [];
       
       // Fetch prescriptions for each appointment
-      const enrichedAppointments = await Promise.all(
-        appointmentsList.map(async (apt) => {
+      const enrichedAppointments: Appointment[] = await Promise.all(
+        appointmentsList.map(async (apt: any): Promise<Appointment> => {
           // Ensure doctor and hospital are properly formatted
           const doctor = apt.doctor ? {
-            name: apt.doctor.name || "Unknown Doctor",
-            specialization: apt.doctor.specialization,
-          } : null;
+            name: String(apt.doctor.name || "Unknown Doctor"),
+            specialization: apt.doctor.specialization ? String(apt.doctor.specialization) : undefined,
+          } : undefined;
           
           const hospital = apt.hospital ? {
-            name: apt.hospital.name || "Unknown Hospital",
-            address: apt.hospital.address,
-          } : null;
+            name: String(apt.hospital.name || "Unknown Hospital"),
+            address: apt.hospital.address ? String(apt.hospital.address) : undefined,
+          } : undefined;
           
           // Fetch prescription for this appointment
-          let prescription = null;
+          let prescription: Appointment["prescription"] = undefined;
           try {
-            const prescriptions = await apiGet(`/api/prescriptions?appointmentId=${apt._id}`);
+            const prescriptions = await apiGet<any[]>(`/api/prescriptions?appointmentId=${apt._id}`);
             const prescriptionList = Array.isArray(prescriptions) ? prescriptions : [];
             if (prescriptionList.length > 0) {
               prescription = prescriptionList[0];
@@ -148,8 +148,19 @@ export default function AppointmentsPage() {
             console.log("No prescription found for appointment:", apt._id);
           }
           
+          // Map to Appointment type, ensuring all required fields are present
           return {
-            ...apt,
+            _id: String(apt._id ?? ""),
+            hospitalId: String(apt.hospitalId ?? ""),
+            doctorId: String(apt.doctorId ?? ""),
+            patientId: String(apt.patientId ?? ""),
+            status: String(apt.status ?? ""),
+            patientName: String(apt.patientName ?? ""),
+            age: Number(apt.age ?? 0),
+            address: String(apt.address ?? ""),
+            issue: String(apt.issue ?? ""),
+            scheduledAt: String(apt.scheduledAt ?? ""),
+            channel: String(apt.channel ?? ""),
             doctor,
             hospital,
             prescription,

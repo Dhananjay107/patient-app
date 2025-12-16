@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 import { apiGet } from "@/lib/api";
 import { RecordsIcon } from "./icons";
 

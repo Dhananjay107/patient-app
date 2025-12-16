@@ -91,10 +91,10 @@ export default function OrdersPage() {
       
       // Fetch pharmacy details
       const enrichedOrders = await Promise.all(
-        ordersList.map(async (order) => {
+        ordersList.map(async (order): Promise<Order> => {
           try {
             const pharmacy = await apiGet<Pharmacy>(`/api/master/pharmacies/${order.pharmacyId}`).catch(() => null);
-            return { ...order, pharmacy };
+            return { ...order, pharmacy: pharmacy || undefined };
           } catch {
             return order;
           }
@@ -130,8 +130,13 @@ export default function OrdersPage() {
 
   const fetchPharmacies = async () => {
     try {
-      const data = await apiGet<Pharmacy[]>("/api/public/pharmacies");
-      let pharmaciesList = Array.isArray(data?.data || data) ? (data.data || data) : [];
+      const data = await apiGet<{ data?: Pharmacy[] } | Pharmacy[]>("/api/public/pharmacies");
+      let pharmaciesList: Pharmacy[] = [];
+      if (Array.isArray(data)) {
+        pharmaciesList = data;
+      } else if (data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
+        pharmaciesList = data.data;
+      }
       
       // Calculate distances if user location is available
       if (userLocation) {

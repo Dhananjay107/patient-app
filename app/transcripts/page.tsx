@@ -20,6 +20,7 @@ interface Conversation {
   summary?: string;
   startedAt: string;
   endedAt?: string;
+  isActive?: boolean;
   appointment?: {
     scheduledAt: string;
     doctorId: string;
@@ -61,10 +62,10 @@ export default function TranscriptsPage() {
       const enrichedConversations = await Promise.all(
         conversationsList.map(async (conv) => {
           try {
-            const appointment = await apiGet(`/api/appointments/${conv.appointmentId}`).catch(() => null);
+            const appointment = await apiGet<{ doctorId: string; scheduledAt: string }>(`/api/appointments/${conv.appointmentId}`).catch(() => null);
             if (appointment) {
-              const doctor = await apiGet(`/api/users/${appointment.doctorId}`).catch(() => null);
-              return { ...conv, appointment: { ...appointment, doctor } };
+              const doctor = await apiGet<{ name: string }>(`/api/users/${appointment.doctorId}`).catch(() => null);
+              return { ...conv, appointment: { ...appointment, doctor: doctor || undefined } };
             }
             return conv;
           } catch {

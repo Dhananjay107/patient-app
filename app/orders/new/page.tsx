@@ -84,7 +84,12 @@ export default function NewOrderPage() {
   const fetchPharmacies = async () => {
     try {
       const data = await apiGet<{ data?: Pharmacy[] } | Pharmacy[]>("/api/public/pharmacies");
-      let pharmaciesList = Array.isArray(data?.data || data) ? (data.data || data) : [];
+      let pharmaciesList: Pharmacy[] = [];
+      if (Array.isArray(data)) {
+        pharmaciesList = data;
+      } else if (data && typeof data === 'object' && 'data' in data && Array.isArray(data.data)) {
+        pharmaciesList = data.data;
+      }
       
       // Calculate distances if user location is available
       if (userLocation) {

@@ -60,8 +60,8 @@ export default function ReschedulePage() {
       
       // Fetch doctor details
       if (data.doctorId) {
-        const doctor = await apiGet(`/api/users/${data.doctorId}`).catch(() => null);
-        setAppointment({ ...data, doctor });
+        const doctorData = await apiGet<{ name: string }>(`/api/users/${data.doctorId}`).catch(() => null);
+        setAppointment({ ...data, doctor: doctorData || undefined });
       }
     } catch (error: any) {
       console.error("Error fetching appointment:", error);
