@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { apiGet } from "@/lib/api";
-import { initializeSocket } from "@/lib/socket";
+// Socket is already initialized in SocketProvider
 import DashboardLayout from "@/components/DashboardLayout";
 import {
   AppointmentsIcon,
@@ -52,7 +52,7 @@ export default function DashboardPage() {
       
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
-      initializeSocket(storedToken);
+      // Socket is already initialized in SocketProvider, no need to initialize again
     }
   }, [router]);
 

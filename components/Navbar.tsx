@@ -9,6 +9,8 @@ import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 
 interface NavbarProps {
   user?: {
+    id?: string;
+    _id?: string;
     name?: string;
     email?: string;
     role?: string;
@@ -53,8 +55,15 @@ export default function Navbar({ user, onMenuToggle }: NavbarProps) {
 
     // Listen for new notifications
     const socket = getSocket();
-    if (socket) {
-      const handleNewNotification = () => {
+    if (socket && user) {
+      const handleNewNotification = (data?: any) => {
+        // For message:created, check if it's not from current user
+        if (data && data.message && user) {
+          const userId = user.id || user._id;
+          if (userId && data.message.senderId === userId) {
+            return; // Don't show notification for own messages
+          }
+        }
         fetchNotificationCount();
       };
 

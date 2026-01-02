@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { apiGet, apiPost, apiDelete } from "@/lib/api";
-import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
+import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
 
 interface Pharmacy {
@@ -63,7 +63,7 @@ export default function OrdersPage() {
       
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
-      initializeSocket(storedToken);
+      // Socket is already initialized in SocketProvider, no need to initialize again
       
       // Get user location
       if (navigator.geolocation) {

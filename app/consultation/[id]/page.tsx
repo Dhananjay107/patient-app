@@ -5,7 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { apiGet, apiPost, apiPatch } from "@/lib/api";
-import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
+import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
 import PrescriptionModal from "@/components/PrescriptionModal";
 
@@ -66,9 +66,19 @@ export default function ConsultationPage() {
       
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
-      initializeSocket(storedToken);
+      // Socket is already initialized in SocketProvider, no need to initialize again
     }
   }, [router]);
+
+  const playNotificationSound = () => {
+    try {
+      const audio = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIGWi77+efTRAMUKfj8LZjHAY4kdfyzHksBSR3x/Dej0AKE1606euoVRQKRp/g8r5sIQUrgc7y2Yk2CBlou+/nn00QDFCn4/C2YxwGOJHX8sx5LAUkd8fw3o9AChNetOnrqFUUCkaf4PK+bCEFK4HO8tmJNggZaLvv559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N6PQAo=");
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+    } catch (error) {
+      // Ignore audio errors
+    }
+  };
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -125,8 +135,11 @@ export default function ConsultationPage() {
     if (!socket) return;
 
     const handleNewMessage = (data: any) => {
-      if (data.appointmentId === appointmentId) {
+      // Only update if message is for this appointment and not from current user
+      if (data.appointmentId === appointmentId && user && data.message?.senderId !== user.id && data.message?.senderId !== user._id) {
         fetchData(); // Refresh conversation
+        // Play notification sound
+        playNotificationSound();
       }
     };
 
@@ -205,7 +218,7 @@ export default function ConsultationPage() {
       const formData = new FormData();
       formData.append("file", file);
 
-      const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
+      const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
       const response = await fetch(`${API_BASE}/api/report-requests/${requestId}/upload`, {
         method: "PATCH",
         headers: {

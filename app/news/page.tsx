@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { apiGet, apiPatch } from "@/lib/api";
-import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
+import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
 import PrescriptionModal from "@/components/PrescriptionModal";
 
@@ -44,8 +44,7 @@ export default function NewsPage() {
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
       
-      // Initialize socket
-      initializeSocket(storedToken);
+      // Socket is already initialized in SocketProvider, no need to initialize again
     }
   }, [router]);
 

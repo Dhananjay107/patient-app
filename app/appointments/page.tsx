@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { apiGet, apiPatch, apiPost, apiDelete } from "@/lib/api";
-import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
+import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
 import { DownloadIcon, EyeIcon, RecordsIcon } from "@/components/icons";
 
@@ -59,7 +59,7 @@ export default function AppointmentsPage() {
       
       setUser(JSON.parse(storedUser));
       setToken(storedToken);
-      initializeSocket(storedToken);
+      // Socket is already initialized in SocketProvider, no need to initialize again
     }
   }, [router]);
 

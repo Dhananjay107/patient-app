@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { apiGet, apiPut } from "@/lib/api";
-import { initializeSocket, getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
+import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 import DashboardLayout from "@/components/DashboardLayout";
 
 interface Order {
@@ -59,7 +59,7 @@ export default function TrackOrderPage() {
       // Only initialize socket if we have a token
       // Socket will handle connection errors gracefully
       try {
-        initializeSocket(storedToken);
+        // Socket is already initialized in SocketProvider, no need to initialize again
       } catch (error) {
         console.warn("Failed to initialize socket:", error);
         // Continue without socket - real-time updates won't work but page will still function

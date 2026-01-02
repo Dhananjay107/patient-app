@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { apiPost } from "@/lib/api";
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:4000";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
 function LoginContent() {
   const router = useRouter();

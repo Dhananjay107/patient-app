@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import toast from "react-hot-toast";
 import { apiGet, apiPost } from "@/lib/api";
+import { getSocket, onSocketEvent, offSocketEvent } from "@/lib/socket";
 
 interface Doctor {
   _id: string;
@@ -66,8 +67,44 @@ export default function DoctorBookingPage() {
       setUser(userData);
       setToken(storedToken);
       setFormData(prev => ({ ...prev, patientName: userData.name || "" }));
+      
+      // Socket is already initialized in SocketProvider, no need to initialize again
     }
   }, [router]);
+  
+  // Listen for real-time slot updates
+  useEffect(() => {
+    if (!token || !doctorId) return;
+    
+    const socket = getSocket();
+    if (!socket) return;
+    
+    const handleSlotUpdate = (data: any) => {
+      // If slot update is for this doctor and selected date, refresh slots
+      if (data.doctorId === doctorId && selectedDate) {
+        const slotDate = new Date(data.date).toISOString().split("T")[0];
+        if (slotDate === selectedDate) {
+          checkSlotAvailability();
+        }
+      }
+    };
+    
+    const handleSlotBooked = (data: any) => {
+      // If slot was booked for this doctor, refresh slots
+      if (data.doctorId === doctorId && selectedDate) {
+        checkSlotAvailability();
+      }
+    };
+    
+    onSocketEvent("slot:updated", handleSlotUpdate);
+    onSocketEvent("slot:booked", handleSlotBooked);
+    
+    return () => {
+      offSocketEvent("slot:updated", handleSlotUpdate);
+      offSocketEvent("slot:booked", handleSlotBooked);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token, doctorId, selectedDate]);
 
   useEffect(() => {
     if (!token || !doctorId) return;

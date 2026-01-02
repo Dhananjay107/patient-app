@@ -1,5 +1,5 @@
 // API utility with automatic error handling
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE || "https://d-kjyc.onrender.com";
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE;
 
 export async function apiFetch(
   endpoint: string,
