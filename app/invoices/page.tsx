@@ -61,12 +61,25 @@ export default function InvoicesPage() {
       const ordersData = await apiGet<Order[]>(`/api/orders/my`).catch(() => []);
       setOrders(Array.isArray(ordersData) ? ordersData : []);
 
-      // Fetch finance entries (bills)
-      const billsData = await apiGet<{ entries?: FinanceEntry[] }>(`/api/finance/summary`).catch(() => ({ entries: [] }));
+      // Fetch finance entries (bills) - filter by patientId
+      const billsData = await apiGet<{ entries?: FinanceEntry[] }>(`/api/finance/summary?patientId=${user.id}`).catch(() => ({ entries: [] }));
       const allEntries = billsData.entries || [];
-      const patientBills = allEntries.filter((entry: FinanceEntry) => 
-        entry.meta?.orderId || entry.meta?.appointmentId
-      );
+      // Filter to only show entries that belong to this patient
+      const patientBills = allEntries.filter((entry: FinanceEntry) => {
+        // Check if the entry has a patientId that matches the current user
+        const entryPatientId = (entry as any).patientId;
+        if (entryPatientId && String(entryPatientId) === String(user.id)) {
+          return true;
+        }
+        // Also check if it has orderId or appointmentId in meta (for backward compatibility)
+        // but only if we can verify it belongs to this patient
+        if (entry.meta?.orderId || entry.meta?.appointmentId) {
+          // If patientId is not set but meta has orderId/appointmentId, 
+          // we'll include it but ideally backend should set patientId
+          return entryPatientId === undefined || String(entryPatientId) === String(user.id);
+        }
+        return false;
+      });
       setBills(patientBills);
     } catch (error: any) {
       console.error("Error fetching data:", error);

@@ -12,6 +12,7 @@ import {
   RecordsIcon,
   NewsIcon,
 } from "./icons";
+import MedicalStoreIcon from "./MedicalStoreIcon";
 
 interface NavItem {
   name: string;
@@ -32,6 +33,12 @@ const navigation: NavItem[] = [
     href: "/appointments",
     icon: AppointmentsIcon,
     description: "Book and manage appointments",
+  },
+  {
+    name: "Medical Store",
+    href: "/medical-store",
+    icon: MedicalStoreIcon,
+    description: "Buy medicines and health products",
   },
   {
     name: "Orders",
