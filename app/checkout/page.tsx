@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import toast from "react-hot-toast";
 import { apiPost, apiFetch } from "@/lib/api";
@@ -25,7 +25,7 @@ interface CheckoutData {
 type PaymentMethod = "CASH" | "CARD" | "UPI" | "WALLET" | "NET_BANKING";
 type DeliveryType = "DELIVERY" | "PICKUP";
 
-export default function CheckoutPage() {
+function CheckoutContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const pharmacyIdParam = searchParams.get("pharmacy");
@@ -491,6 +491,22 @@ export default function CheckoutPage() {
         </div>
       </div>
     </DashboardLayout>
+  );
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense
+      fallback={
+        <DashboardLayout title="Checkout">
+          <div className="flex items-center justify-center py-12">
+            <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+          </div>
+        </DashboardLayout>
+      }
+    >
+      <CheckoutContent />
+    </Suspense>
   );
 }
 

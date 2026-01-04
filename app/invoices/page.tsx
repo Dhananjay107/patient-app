@@ -65,20 +65,11 @@ export default function InvoicesPage() {
       const billsData = await apiGet<{ entries?: FinanceEntry[] }>(`/api/finance/summary?patientId=${user.id}`).catch(() => ({ entries: [] }));
       const allEntries = billsData.entries || [];
       // Filter to only show entries that belong to this patient
+      // The backend should already filter by patientId, but we double-check here for security
       const patientBills = allEntries.filter((entry: FinanceEntry) => {
-        // Check if the entry has a patientId that matches the current user
         const entryPatientId = (entry as any).patientId;
-        if (entryPatientId && String(entryPatientId) === String(user.id)) {
-          return true;
-        }
-        // Also check if it has orderId or appointmentId in meta (for backward compatibility)
-        // but only if we can verify it belongs to this patient
-        if (entry.meta?.orderId || entry.meta?.appointmentId) {
-          // If patientId is not set but meta has orderId/appointmentId, 
-          // we'll include it but ideally backend should set patientId
-          return entryPatientId === undefined || String(entryPatientId) === String(user.id);
-        }
-        return false;
+        // Only include entries that have the current patient's ID
+        return entryPatientId && String(entryPatientId) === String(user.id);
       });
       setBills(patientBills);
     } catch (error: any) {
