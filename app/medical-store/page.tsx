@@ -53,6 +53,25 @@ export default function MedicalStorePage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [hasMore, setHasMore] = useState(false);
   const itemsPerPage = 20;
+  const [compositionResults, setCompositionResults] = useState<{
+    compositions: Array<{
+      composition: string;
+      medicineName: string;
+      brands: Array<{
+        inventoryItemId: string;
+        brandName: string;
+        batchNumber?: string;
+        expiryDate?: string;
+        daysUntilExpiry?: number;
+        availableQuantity: number;
+        sellingPrice: number;
+        mrp: number;
+        pharmacy?: { _id: string; name: string; address?: string; phone?: string; distance?: number };
+      }>;
+    }>;
+    query: string;
+  } | null>(null);
+  const [loadingComposition, setLoadingComposition] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -95,6 +114,26 @@ export default function MedicalStorePage() {
       loadProducts();
     }
   }, [user, selectedCategory, searchQuery, priceRange, prescriptionFilter, userLocation, currentPage]);
+
+  useEffect(() => {
+    if (!user || !searchQuery || searchQuery.trim().length < 2) {
+      setCompositionResults(null);
+      return;
+    }
+    const params = new URLSearchParams({ search: searchQuery.trim() });
+    if (userLocation) {
+      params.append("latitude", userLocation.lat.toString());
+      params.append("longitude", userLocation.lng.toString());
+      params.append("radius", "15");
+    }
+    setLoadingComposition(true);
+    apiGet<{ compositions: any[]; query: string }>(`/api/public/products/by-composition?${params}`)
+      .then((data) => {
+        setCompositionResults(data);
+      })
+      .catch(() => setCompositionResults(null))
+      .finally(() => setLoadingComposition(false));
+  }, [user, searchQuery, userLocation]);
 
   const updateCartCount = () => {
     setCartCount(cartUtils.getCartCount());
@@ -168,6 +207,35 @@ export default function MedicalStorePage() {
 
     cartUtils.addToCart(cartItem);
     toast.success("Added to cart!");
+  };
+
+  const handleAddBrandToCart = (
+    composition: string,
+    medicineName: string,
+    brand: {
+      inventoryItemId: string;
+      brandName: string;
+      sellingPrice: number;
+      mrp: number;
+      availableQuantity: number;
+      pharmacy?: { _id: string; name: string };
+    }
+  ) => {
+    const cartItem: CartItem = {
+      productId: brand.inventoryItemId,
+      medicineName: medicineName || composition,
+      composition,
+      brandName: brand.brandName,
+      quantity: 1,
+      price: brand.sellingPrice,
+      mrp: brand.mrp,
+      pharmacyId: brand.pharmacy?._id || "",
+      pharmacyName: brand.pharmacy?.name,
+      availableQuantity: brand.availableQuantity,
+    };
+    cartUtils.addToCart(cartItem);
+    toast.success(`${brand.brandName} added to cart!`);
+    updateCartCount();
   };
 
   const handleFilterReset = () => {
@@ -302,6 +370,57 @@ export default function MedicalStorePage() {
             </button>
           </div>
         </div>
+
+        {/* Search by composition – show available brands */}
+        {searchQuery.trim().length >= 2 && (
+          <div className="bg-white rounded-lg shadow p-4">
+            <h2 className="text-lg font-bold text-gray-900 mb-3">Search by composition or brand</h2>
+            {loadingComposition ? (
+              <div className="flex justify-center py-6">
+                <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : compositionResults?.compositions?.length ? (
+              <div className="space-y-4">
+                {compositionResults.compositions.map((comp, idx) => (
+                  <div key={idx} className="border border-gray-200 rounded-lg p-4">
+                    <h3 className="font-semibold text-gray-900 mb-1">{comp.medicineName || comp.composition}</h3>
+                    <p className="text-sm text-gray-500 mb-3">Composition: {comp.composition}</p>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                      {comp.brands.map((brand) => (
+                        <div
+                          key={brand.inventoryItemId}
+                          className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border border-gray-100"
+                        >
+                          <div>
+                            <p className="font-medium text-gray-900">{brand.brandName}</p>
+                            <p className="text-sm text-gray-600">
+                              ₹{brand.sellingPrice.toFixed(2)}
+                              {brand.mrp > brand.sellingPrice && (
+                                <span className="ml-2 line-through text-gray-400">₹{brand.mrp.toFixed(2)}</span>
+                              )}
+                            </p>
+                            {brand.pharmacy && (
+                              <p className="text-xs text-gray-500 mt-1">{brand.pharmacy.name}</p>
+                            )}
+                          </div>
+                          <button
+                            onClick={() => handleAddBrandToCart(comp.composition, comp.medicineName, brand)}
+                            disabled={cartUtils.isInCart(brand.inventoryItemId, brand.pharmacy?._id || "")}
+                            className="px-3 py-1.5 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                          >
+                            {cartUtils.isInCart(brand.inventoryItemId, brand.pharmacy?._id || "") ? "In cart" : "Add"}
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : !loadingComposition && compositionResults ? (
+              <p className="text-gray-500 py-4">No compositions found for &quot;{searchQuery}&quot;</p>
+            ) : null}
+          </div>
+        )}
 
         {/* Products Grid */}
         {loading && products.length === 0 ? (

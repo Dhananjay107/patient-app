@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
@@ -10,6 +11,21 @@ interface DashboardLayoutProps {
   title?: string;
   description?: string;
   actionButton?: React.ReactNode;
+}
+
+const pathToLabel: Record<string, string> = {
+  dashboard: "Dashboard",
+  appointments: "Appointments",
+  "medical-store": "Medical Store",
+  orders: "Orders",
+  invoices: "Invoices",
+  transcripts: "Transcripts",
+  records: "Records",
+  news: "Notifications",
+};
+function getBreadcrumbLabel(pathname: string): string {
+  const segment = pathname?.replace(/^\//, "").split("/")[0] || "";
+  return pathToLabel[segment] || segment.replace(/-/g, " ");
 }
 
 export default function DashboardLayout({
@@ -66,28 +82,33 @@ export default function DashboardLayout({
         {/* Navbar */}
         <Navbar user={user} onMenuToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} />
 
-        {/* Page header */}
-        {(title || actionButton) && (
-          <div className="bg-white border-b border-gray-200">
-            <div className="px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+        {/* Breadcrumb + Page header */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="px-4 sm:px-6 lg:px-8 py-3 sm:py-4">
+            <div className="flex items-center gap-2 text-sm text-gray-500 mb-1">
+              <Link href="/dashboard" className="hover:text-blue-600 transition-colors">Patient</Link>
+              <span>/</span>
+              <span className="font-medium text-gray-800">{pathname ? getBreadcrumbLabel(pathname) : "Dashboard"}</span>
+            </div>
+            {(title || actionButton) && (
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-4">
                 <div className="flex-1 min-w-0">
                   {title && (
-                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 leading-[100%] break-words">
+                    <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-900 break-words">
                       {title}
                     </h1>
                   )}
                   {description && (
-                    <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-600 leading-[100%] break-words">
+                    <p className="mt-1 sm:mt-2 text-xs sm:text-sm text-gray-600 break-words">
                       {description}
                     </p>
                   )}
                 </div>
                 {actionButton && <div className="flex-shrink-0">{actionButton}</div>}
               </div>
-            </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* Page content */}
         <main className="flex-1 px-3 sm:px-4 lg:px-8 py-4 sm:py-6 w-full overflow-x-hidden">

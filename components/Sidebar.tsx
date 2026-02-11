@@ -19,57 +19,18 @@ interface NavItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   description: string;
+  section?: string;
 }
 
 const navigation: NavItem[] = [
-  {
-    name: "Dashboard",
-    href: "/dashboard",
-    icon: DashboardIcon,
-    description: "Overview and quick actions",
-  },
-  {
-    name: "Appointments",
-    href: "/appointments",
-    icon: AppointmentsIcon,
-    description: "Book and manage appointments",
-  },
-  {
-    name: "Medical Store",
-    href: "/medical-store",
-    icon: MedicalStoreIcon,
-    description: "Buy medicines and health products",
-  },
-  {
-    name: "Orders",
-    href: "/orders",
-    icon: OrdersIcon,
-    description: "Medicine orders and tracking",
-  },
-  {
-    name: "Transcripts",
-    href: "/transcripts",
-    icon: TranscriptsIcon,
-    description: "Consultation transcripts",
-  },
-  {
-    name: "Invoices",
-    href: "/invoices",
-    icon: InvoicesIcon,
-    description: "Bills and invoices",
-  },
-  {
-    name: "Records",
-    href: "/records",
-    icon: RecordsIcon,
-    description: "Prescription records with templates",
-  },
-  {
-    name: "Notifications",
-    href: "/news",
-    icon: NewsIcon,
-    description: "notifications",
-  },
+  { name: "Dashboard", href: "/dashboard", icon: DashboardIcon, description: "Overview and quick actions", section: "Home" },
+  { name: "Appointments", href: "/appointments", icon: AppointmentsIcon, description: "Book and manage appointments", section: "Book & Care" },
+  { name: "Medical Store", href: "/medical-store", icon: MedicalStoreIcon, description: "Buy medicines and health products", section: "Book & Care" },
+  { name: "Orders", href: "/orders", icon: OrdersIcon, description: "Medicine orders and tracking", section: "Orders & Bills" },
+  { name: "Invoices", href: "/invoices", icon: InvoicesIcon, description: "Bills and invoices", section: "Orders & Bills" },
+  { name: "Transcripts", href: "/transcripts", icon: TranscriptsIcon, description: "Consultation transcripts", section: "Records" },
+  { name: "Records", href: "/records", icon: RecordsIcon, description: "Prescription records", section: "Records" },
+  { name: "Notifications", href: "/news", icon: NewsIcon, description: "Updates and alerts", section: "Account" },
 ];
 
 interface SidebarProps {
@@ -111,44 +72,46 @@ export default function Sidebar({ isMobileOpen, setIsMobileOpen }: SidebarProps)
             </div>
           </div>
 
-          {/* Navigation */}
-          <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-            {navigation.map((item) => {
-              const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => setIsMobileOpen(false)}
-                  className={`
-                    group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative
-                    ${
-                      isActive
-                        ? "bg-gradient-to-r from-blue-50 to-blue-100 text-blue-900 shadow-sm"
-                        : "text-gray-700 hover:bg-gray-50 hover:text-blue-900"
-                    }
-                  `}
-                >
-                  {isActive && (
-                    <div className="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r-full"></div>
-                  )}
-                  <div className={`flex-shrink-0 transition-transform group-hover:scale-110 ${isActive ? "text-blue-600" : "text-gray-600"}`}>
-                    <item.icon className="w-5 h-5" />
+          {/* Navigation - Grouped by section */}
+          <nav className="flex-1 px-3 py-4 overflow-y-auto">
+            {(() => {
+              const sections = Array.from(new Set(navigation.map((i) => i.section || "Main")));
+              return sections.map((section) => (
+                <div key={section} className="mb-5">
+                  <p className="px-3 mb-2 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                    {section}
+                  </p>
+                  <div className="space-y-0.5">
+                    {navigation.filter((i) => (i.section || "Main") === section).map((item) => {
+                      const isActive = pathname === item.href || pathname?.startsWith(item.href + "/");
+                      return (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          onClick={() => setIsMobileOpen(false)}
+                          className={`
+                            group flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all duration-200 relative
+                            ${isActive ? "bg-blue-50 text-blue-900 border-l-2 border-blue-600" : "text-gray-700 hover:bg-gray-50 hover:text-blue-800"}
+                          `}
+                        >
+                          <div className={`flex-shrink-0 ${isActive ? "text-blue-600" : "text-gray-500"}`}>
+                            <item.icon className="w-5 h-5" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className={`font-medium text-sm ${isActive ? "text-blue-900" : "text-gray-900"}`}>
+                              {item.name}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-0.5 line-clamp-1">
+                              {item.description}
+                            </div>
+                          </div>
+                        </Link>
+                      );
+                    })}
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className={`font-semibold text-sm leading-[100%] ${isActive ? "text-blue-900" : "text-gray-900"}`}>
-                      {item.name}
-                    </div>
-                    <div className="text-xs text-gray-500 mt-0.5 leading-[100%] line-clamp-1">
-                      {item.description}
-                    </div>
-                  </div>
-                  {isActive && (
-                    <div className="h-2 w-2 rounded-full bg-blue-600 flex-shrink-0"></div>
-                  )}
-                </Link>
-              );
-            })}
+                </div>
+              ));
+            })()}
           </nav>
 
           {/* Footer */}
